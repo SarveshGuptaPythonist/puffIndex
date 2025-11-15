@@ -272,7 +272,7 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
 
 export async function getStaticPaths() {
   // Only pre-generate a few popular cities to speed up build
-  const popularCities = ['Mumbai (India)', 'Delhi (India)', 'Bangalore (India)', 'Chennai (India)', 'Kolkata (India)']
+  const popularCities = ['Callao (Peru)']
   const paths = popularCities.map(city => ({
     params: { city: city.toLowerCase() }
   }))
