@@ -165,22 +165,6 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
           </Button>
         </HStack>
 
-        <Card bg={cardBg} border="1px" borderColor={borderColor}>
-          <CardBody>
-            <VStack align="start" spacing={4}>
-              <HStack>
-                <InfoIcon color="blue.500" />
-                <Heading size="md">Location Details</Heading>
-              </HStack>
-              <Stat>
-                <StatLabel>Coordinates</StatLabel>
-                <StatNumber fontSize="lg">{currentCityData?.lat_long || 'Loading...'}</StatNumber>
-                <StatHelpText>Latitude, Longitude</StatHelpText>
-              </Stat>
-            </VStack>
-          </CardBody>
-        </Card>
-
         {currentAqiData ? (
           <Card bg={cardBg} border="1px" borderColor={borderColor}>
             <CardBody>
