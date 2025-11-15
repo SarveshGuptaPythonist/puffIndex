@@ -29746,7 +29746,6 @@ export const cityCoordinates = {
 "Mapleton (Canada)": "43.7358,-80.6681",
 "Hericourt (France)": "47.5783,6.7622",
 "Skillounta (Greece)": "37.6061,21.687",
-"Delhi (United States)": "37.4306,-120.7759",
 "Dhilwan (India)": "31.5143,75.3457",
 "New Albany (United States)": "40.0809,-82.7848",
 "Tulshia (India)": "26.3468,87.8411",

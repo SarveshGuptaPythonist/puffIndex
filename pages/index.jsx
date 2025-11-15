@@ -14,7 +14,8 @@ import {
   List,
   ListItem,
   useDisclosure,
-  Collapse
+  Collapse,
+  HStack
 } from '@chakra-ui/react'
 import { SearchIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { cityCoordinates } from '../data/cityCoordinates'
@@ -45,16 +46,30 @@ export default function Home() {
     <Container maxW="md" py={20}>
       <VStack spacing={8} align="stretch">
         <Box textAlign="center">
-          <Heading
-            size="2xl"
-            bgGradient="linear(to-r, blue.400, purple.500)"
-            bgClip="text"
-            mb={2}
-          >
-            City Air Quality
-          </Heading>
+          <HStack justify="center" mb={4}>
+            <Box
+              w={12}
+              h={12}
+              bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+              borderRadius="xl"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Text fontSize="2xl" color="white" fontWeight="bold">
+                🚬
+              </Text>
+            </Box>
+            <Heading
+              size="2xl"
+              bgGradient="linear(to-r, blue.400, purple.500)"
+              bgClip="text"
+            >
+              PuffsIndex
+            </Heading>
+          </HStack>
           <Text color="gray.500" fontSize="lg">
-            Discover air quality data for cities across India
+            Stop using PM2.5 Index start using cigarette Index
           </Text>
         </Box>
 

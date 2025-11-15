@@ -21,9 +21,12 @@ import {
   Card,
   CardBody,
   Divider,
-  useColorModeValue
+  useColorModeValue,
+  Collapse,
+  useDisclosure,
+  Icon
 } from '@chakra-ui/react'
-import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons'
+import { ArrowBackIcon, InfoIcon, ChevronDownIcon } from '@chakra-ui/icons'
 // import { cities } from '../../data/cities'
 import { cityCoordinates } from '../../data/cityCoordinates'
 
@@ -69,6 +72,7 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
   }
 
   const { cityData: currentCityData, aqiData: currentAqiData, errors: currentErrors } = clientData
+  const { isOpen: isExplanationOpen, onToggle: onExplanationToggle } = useDisclosure()
 
   const getAqiLevel = (aqi) => {
     if (aqi <= 50) return { level: 'Good', color: 'green' }
@@ -77,6 +81,10 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
     if (aqi <= 200) return { level: 'Unhealthy', color: 'red' }
     if (aqi <= 300) return { level: 'Very Unhealthy', color: 'purple' }
     return { level: 'Hazardous', color: 'maroon' }
+  }
+
+  const calculateCigarettes = (aqi) => {
+    return Math.round((aqi / 23.5) * 10) / 10 // Using 23.5 as average of 22-25
   }
 
   const cardBg = useColorModeValue('white', 'gray.800')
@@ -111,16 +119,27 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
       <VStack spacing={8} align="stretch">
         <HStack justify="space-between" align="center">
           <Box>
+            <HStack mb={2}>
+              <Box
+                w={8}
+                h={8}
+                bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                borderRadius="lg"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Text fontSize="lg" color="white">
+                  🚬
+                </Text>
+              </Box>
+              <Heading size="lg" color="gray.600">
+                PuffsIndex
+              </Heading>
+            </HStack>
             <Heading size="2xl" color="blue.600">
               {currentCityData.city}
             </Heading>
-            <Badge
-              colorScheme={isClientSide ? 'orange' : 'green'}
-              variant="subtle"
-              mt={2}
-            >
-              {isClientSide ? 'Client-side rendered' : 'Server-side rendered'}
-            </Badge>
           </Box>
           <Button
             leftIcon={<ArrowBackIcon />}
@@ -155,7 +174,7 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
                 <Heading size="md" color="green.600">Air Quality Index</Heading>
                 <Divider />
 
-                <HStack justify="space-between" w="full">
+                <HStack justify="space-between" w="full" spacing={8}>
                   <Stat>
                     <StatLabel>AQI Level</StatLabel>
                     <HStack>
@@ -167,14 +186,44 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
                       {getAqiLevel(currentAqiData.aqi).level}
                     </Badge>
                   </Stat>
+
+                  <Stat>
+                    <StatLabel>Cigarette Equivalent</StatLabel>
+                    <HStack>
+                      <StatNumber fontSize="4xl" color="red.500">
+                        {calculateCigarettes(currentAqiData.aqi)}
+                      </StatNumber>
+                      <Text fontSize="lg" color="gray.500">per day</Text>
+                    </HStack>
+                    <Badge colorScheme="red" variant="outline">
+                      Daily Exposure
+                    </Badge>
+                  </Stat>
                 </HStack>
 
-                {/* <Box>
-                  <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                    Station ID
-                  </Text>
-                  <Text fontSize="lg">{currentAqiData.idx}</Text>
-                </Box> */}
+                <Box w="full">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onExplanationToggle}
+                    rightIcon={<Icon as={ChevronDownIcon} transform={isExplanationOpen ? 'rotate(180deg)' : 'rotate(0deg)'} transition="transform 0.2s" />}
+                  >
+                    How is this calculated?
+                  </Button>
+
+                  <Collapse in={isExplanationOpen}>
+                    <Box mt={3} p={4} bg="gray.50" borderRadius="md">
+                      <Text fontSize="sm" color="gray.700">
+                        <strong>Calculation Method:</strong><br/>
+                        • Rule of thumb: 22-25 AQI ≈ 1 cigarette per day<br/>
+                        • We use 23.5 as the average (middle of 22-25 range)<br/>
+                        • Formula: Cigarettes = AQI ÷ 23.5<br/>
+                        • Current calculation: {currentAqiData.aqi} ÷ 23.5 = {calculateCigarettes(currentAqiData.aqi)} cigarettes<br/><br/>
+                        <strong>Note:</strong> This is an approximation based on particulate matter exposure and should not be considered medical advice.
+                      </Text>
+                    </Box>
+                  </Collapse>
+                </Box>
               </VStack>
             </CardBody>
           </Card>
@@ -189,6 +238,27 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
             </Box>
           </Alert>
         )}
+        
+        <Box textAlign="center" pt={8} borderTop="1px" borderColor={borderColor}>
+          <HStack justify="center" spacing={2}>
+            <Box
+              w={6}
+              h={6}
+              bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+              borderRadius="md"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Text fontSize="sm" color="white">
+                🚬
+              </Text>
+            </Box>
+            <Text fontSize="sm" color="gray.500">
+              Powered by PuffsIndex
+            </Text>
+          </HStack>
+        </Box>
       </VStack>
     </Container>
   )
