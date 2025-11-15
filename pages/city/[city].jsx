@@ -284,16 +284,24 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  console.log('getStaticProps called for:', params.city)
+  
   try {
+    console.log('Available cities:', Object.keys(cityCoordinates).slice(0, 5))
     const cityName = Object.keys(cityCoordinates).find(city => city.toLowerCase() === params.city)
+    console.log('Found cityName:', cityName)
 
     if (!cityName) {
+      console.log('City not found, returning 404')
       return { notFound: true }
     }
 
     const isClientSide = process.env.CLIENT_SIDE_RENDERING === 'true'
+    console.log('CLIENT_SIDE_RENDERING:', process.env.CLIENT_SIDE_RENDERING)
+    console.log('WAQI_TOKEN exists:', !!process.env.WAQI_TOKEN)
 
     if (isClientSide) {
+      console.log('Using client-side rendering')
       return {
         props: {
           cityData: null,
@@ -310,32 +318,47 @@ export async function getStaticProps({ params }) {
   let errors = {}
 
   const coordinates = cityCoordinates[cityName]
+  console.log('Coordinates for', cityName, ':', coordinates)
+  
   if (coordinates) {
     cityData = { city: cityName, lat_long: coordinates }
 
     const [lat, lon] = coordinates.split(',')
     const WAQI_TOKEN = process.env.WAQI_TOKEN
+    console.log('Lat/Lon:', lat, lon)
+    console.log('Token length:', WAQI_TOKEN ? WAQI_TOKEN.length : 'undefined')
 
     if (!WAQI_TOKEN) {
+      console.log('No WAQI token found')
       errors.aqi = 'WAQI token not configured'
     } else {
       try {
-        const aqiResponse = await fetch(`http://api.waqi.info/feed/geo:${lat};${lon}?token=${WAQI_TOKEN}`)
+        const apiUrl = `http://api.waqi.info/feed/geo:${lat};${lon}?token=${WAQI_TOKEN}`
+        console.log('Calling API:', apiUrl.replace(WAQI_TOKEN, 'TOKEN_HIDDEN'))
+        
+        const aqiResponse = await fetch(apiUrl)
+        console.log('API Response status:', aqiResponse.status)
+        
         const data = await aqiResponse.json()
+        console.log('API Response data:', JSON.stringify(data, null, 2))
 
         if (data.status !== 'ok') {
-          errors.aqi = 'Location not found or API error'
+          console.log('API returned error status:', data.status)
+          errors.aqi = `API Error: ${data.data || 'Location not found'}`
         } else {
           aqiData = {
             aqi: data.data.aqi,
             idx: data.data.idx
           }
+          console.log('Successfully got AQI data:', aqiData)
         }
       } catch (aqiError) {
+        console.error('WAQI API error:', aqiError)
         errors.aqi = `WAQI API error: ${aqiError.message}`
       }
     }
   } else {
+    console.log('No coordinates found for city:', cityName)
     errors.coordinates = 'City coordinates not found'
   }
 
