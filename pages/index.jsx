@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import {
   Box,
   Container,
@@ -85,7 +86,17 @@ export default function Home() {
   }
 
   return (
-    <Container maxW="md" py={20}>
+    <>
+      <Head>
+        <title>PuffsIndex - Air Quality in Cigarette Terms</title>
+        <meta name="description" content="Stop using confusing PM2.5 numbers. PuffsIndex converts air pollution to cigarette equivalents - because your health deserves clarity, not confusion." />
+        <meta property="og:title" content="PuffsIndex - Air Quality in Cigarette Terms" />
+        <meta property="og:description" content="Convert air pollution to cigarette equivalents. Understanding air quality in terms everyone recognizes." />
+        <meta property="og:url" content="https://puffsindex.com" />
+        <meta name="twitter:title" content="PuffsIndex - Air Quality in Cigarette Terms" />
+        <meta name="twitter:description" content="Stop using PM2.5 numbers, start using cigarette equivalents for air quality" />
+      </Head>
+      <Container maxW="md" py={20}>
       <VStack spacing={8} align="stretch">
         <Box textAlign="center">
           <HStack justify="center" mb={4}>
@@ -206,5 +217,6 @@ export default function Home() {
         )} */}
       </VStack>
     </Container>
+    </>
   )
 }
