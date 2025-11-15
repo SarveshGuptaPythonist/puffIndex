@@ -71,6 +71,18 @@ export default function Home() {
           <Text color="gray.500" fontSize="lg">
             Stop using PM2.5 Index start using cigarette Index
           </Text>
+
+          {/* <Box mt={6} p={4} bg="blue.50" borderRadius="lg" border="1px" borderColor="blue.200">
+            <Text fontSize="md" color="blue.800" fontWeight="medium" textAlign="center">
+              "Understanding air pollution in terms we all recognize"
+            </Text>
+          </Box> */}
+
+          <Box mt={4} p={4} bg="gray.50" borderRadius="lg" border="1px" borderColor="gray.200">
+            <Text fontSize="sm" color="gray.600" textAlign="center" fontStyle="italic">
+              “I’ve been seeing news for weeks saying India effectively ‘smokes X cigarettes a day’ because of air pollution. Maybe it’s time to stop using AQI and start using cigarettes — we might have been calculating it wrong.”
+            </Text>
+          </Box>
         </Box>
 
         <Box position="relative">
