@@ -333,7 +333,7 @@ export async function getStaticProps({ params }) {
       errors.aqi = 'WAQI token not configured'
     } else {
       try {
-        const apiUrl = `http://api.waqi.info/feed/geo:${lat};${lon}?token=${WAQI_TOKEN}`
+        const apiUrl = `https://api.waqi.info/feed/geo:${lat};${lon}?token=${WAQI_TOKEN}`
         console.log('Calling API:', apiUrl.replace(WAQI_TOKEN, 'TOKEN_HIDDEN'))
         
         const aqiResponse = await fetch(apiUrl)

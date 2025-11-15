@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "WAQI token not configured" });
     }
 
-    const response = await fetch(`http://api.waqi.info/feed/geo:${lat};${lon}?token=${WAQI_TOKEN}`);
+    const response = await fetch(`https://api.waqi.info/feed/geo:${lat};${lon}?token=${WAQI_TOKEN}`);
     const data = await response.json();
 
     if (data.status !== 'ok') {
