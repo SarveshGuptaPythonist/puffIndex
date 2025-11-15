@@ -284,25 +284,26 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const cityName = Object.keys(cityCoordinates).find(city => city.toLowerCase() === params.city)
+  try {
+    const cityName = Object.keys(cityCoordinates).find(city => city.toLowerCase() === params.city)
 
-  if (!cityName) {
-    return { notFound: true }
-  }
+    if (!cityName) {
+      return { notFound: true }
+    }
 
-  const isClientSide = process.env.CLIENT_SIDE_RENDERING === 'true'
+    const isClientSide = process.env.CLIENT_SIDE_RENDERING === 'true'
 
-  if (isClientSide) {
-    return {
-      props: {
-        cityData: null,
-        aqiData: null,
-        errors: {},
-        isClientSide: true,
-        cityName
+    if (isClientSide) {
+      return {
+        props: {
+          cityData: null,
+          aqiData: null,
+          errors: {},
+          isClientSide: true,
+          cityName
+        }
       }
     }
-  }
 
   let cityData = null
   let aqiData = null
@@ -338,14 +339,27 @@ export async function getStaticProps({ params }) {
     errors.coordinates = 'City coordinates not found'
   }
 
-  return {
-    props: {
-      cityData,
-      aqiData,
-      errors,
-      isClientSide: false,
-      cityName
-    },
-    revalidate: 3600
+    return {
+      props: {
+        cityData,
+        aqiData,
+        errors,
+        isClientSide: false,
+        cityName
+      },
+      revalidate: 3600
+    }
+  } catch (error) {
+    console.error('getStaticProps error:', error)
+    return {
+      props: {
+        cityData: { city: cityName || params.city, lat_long: 'Unknown' },
+        aqiData: null,
+        errors: { aqi: 'Service temporarily unavailable' },
+        isClientSide: false,
+        cityName: cityName || params.city
+      },
+      revalidate: 60
+    }
   }
 }
