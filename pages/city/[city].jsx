@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
+import Head from 'next/head'
 import {
   Box,
   Container,
@@ -115,7 +117,19 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
   }
 
   return (
-    <Container maxW="2xl" py={10}>
+    <>
+      <Head>
+        <title>{currentCityData.city} Air Quality - PuffsIndex</title>
+        <meta name="description" content={`Air quality data for ${currentCityData.city}. AQI: ${currentAqiData?.aqi || 'Loading'}, Cigarette equivalent: ${currentAqiData ? calculateCigarettes(currentAqiData.aqi) : 'Loading'} per day.`} />
+        <meta property="og:title" content={`${currentCityData.city} Air Quality - PuffsIndex`} />
+        <meta property="og:description" content={`AQI: ${currentAqiData?.aqi || 'Loading'} equals ${currentAqiData ? calculateCigarettes(currentAqiData.aqi) : 'Loading'} cigarettes per day`} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={`${currentCityData.city} Air Quality`} />
+        <meta name="twitter:description" content={`AQI: ${currentAqiData?.aqi || 'Loading'} = ${currentAqiData ? calculateCigarettes(currentAqiData.aqi) : 'Loading'} cigarettes/day`} />
+        <link rel="canonical" href={`https://puffsindex.com/city/${currentCityData.city.toLowerCase()}`} />
+      </Head>
+      <Container maxW="2xl" py={10}>
       <VStack spacing={8} align="stretch">
         <HStack justify="space-between" align="center">
           <Box>
@@ -219,7 +233,14 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
                         • We use 23.5 as the average (middle of 22-25 range)<br/>
                         • Formula: Cigarettes = AQI ÷ 23.5<br/>
                         • Current calculation: {currentAqiData.aqi} ÷ 23.5 = {calculateCigarettes(currentAqiData.aqi)} cigarettes<br/><br/>
-                        <strong>Note:</strong> This is an approximation based on particulate matter exposure and should not be considered medical advice.
+                        <strong>Note:</strong> This is an approximation based on particulate matter exposure and should not be considered medical advice.<br/><br/>
+                        <strong>Note:</strong> If you still feel the cigarette count is less, watch{' '}
+                        <Link href="https://www.youtube.com/watch?v=q4DkVbpI7cw" target="_blank" rel="noopener noreferrer">
+                          <Text as="span" color="blue.500" textDecoration="underline" cursor="pointer">
+                            this detailed explanation video
+                          </Text>
+                        </Link>
+                        {' '}about air pollution and cigarette equivalency.
                       </Text>
                     </Box>
                   </Collapse>
@@ -238,7 +259,7 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
             </Box>
           </Alert>
         )}
-        
+
         <Box textAlign="center" pt={8} borderTop="1px" borderColor={borderColor}>
           <HStack justify="center" spacing={2}>
             <Box
@@ -261,17 +282,20 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
         </Box>
       </VStack>
     </Container>
+    </>
   )
 }
 
 export async function getStaticPaths() {
-  const paths = Object.keys(cityCoordinates).map(city => ({
+  // Only pre-generate a few popular cities to speed up build
+  const popularCities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Kolkata']
+  const paths = popularCities.map(city => ({
     params: { city: city.toLowerCase() }
   }))
 
   return {
     paths,
-    fallback: false
+    fallback: 'blocking' // Generate other pages on-demand
   }
 }
 
