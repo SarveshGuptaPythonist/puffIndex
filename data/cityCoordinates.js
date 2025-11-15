@@ -19,6 +19,7 @@ export const cityCoordinates = {
 "Moscow (Russia)": "55.7506,37.6175",
 "Buenos Aires (Argentina)": "-34.6036,-58.3814",
 "Bangalore (India)": "12.9789,77.5917",
+"Bengaluru (India)": "12.9789,77.5917",
 "Ho Chi Minh City (Vietnam)": "10.7756,106.7019",
 "Osaka (Japan)": "34.6939,135.5022",
 "Chengdu (China)": "30.66,104.0633",
