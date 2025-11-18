@@ -260,7 +260,7 @@ export default function CityPage({ cityData, aqiData, errors, isClientSide, city
               </Text>
             </Box>
             <Text fontSize="sm" color="gray.500">
-              Powered by PuffsIndex
+              Made while coughing by Sarvesh Gupta
             </Text>
           </HStack>
         </Box>
